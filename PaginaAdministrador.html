@@ -119,7 +119,7 @@
                 alert("Ocurrio un error, ver la consola")
             })
             .then(response =>{
-                console.log(response);
+                //console.log(response);
                 // Usamos un foreach para darle el valor a un objeto dentro de un arreglo.
 
                 // arreglo.forEach(variable => {que se hara dentro del for})
@@ -128,8 +128,8 @@
                       u = response.Nombre
                       ap=response.Apellido
                       us = response.Usuario
-                      console.log(u);
-                      console.log(us);
+                      //console.log(u);
+                      //console.log(us);
 
 
                 // POR ULTIMO: Usamos innerHTML para agregar el HTML a la etiqueta que indicamos anteriormente.
@@ -182,7 +182,7 @@
                 'telefono': telefono,
                 'tipo' : "paciente"
           }
-          console.log(objeto)
+          //console.log(objeto)
           
           fetch('https://backend-proyecto2ipc1.herokuapp.com/Personas', {
           method: 'POST',
@@ -197,7 +197,7 @@
               val = false
           })
           .then(response =>{
-                console.log(response);
+                //console.log(response);
                 
           })
 
@@ -230,7 +230,7 @@
       }
 
       async function GuardarDoc(results){
-        console.log(results.data)
+        //console.log(results.data)
         var data = results.data;
         var val = true
 
@@ -254,7 +254,7 @@
                 'telefono': telefono,
                 'tipo' : "doctor"
           }
-          console.log(objeto)
+          //console.log(objeto)
           
           fetch('https://backend-proyecto2ipc1.herokuapp.com/Personas', {
           method: 'POST',
@@ -269,7 +269,7 @@
               val = false
           })
           .then(response =>{
-                console.log(response);
+                //console.log(response);
                 
           })
 
@@ -302,7 +302,7 @@
       }
 
       async function GuardarEnf(results){
-        console.log(results.data)
+        //console.log(results.data)
         var data = results.data;
         var val = true
 
@@ -325,7 +325,7 @@
                 'telefono': telefono,
                 'tipo' : "enfermera"
           }
-          console.log(objeto)
+          //console.log(objeto)
           
           fetch('https://backend-proyecto2ipc1.herokuapp.com/Personas', {
           method: 'POST',
@@ -373,7 +373,7 @@
       }
 
       async function GuardarMed(results){
-        console.log(results.data)
+        //console.log(results.data)
         var data = results.data;
         var val = true
 
@@ -388,7 +388,7 @@
                 'descripcion': descripcion,
                 'cantidad': cantidad,
           }
-          console.log(objeto)
+          //console.log(objeto)
           
           fetch('https://backend-proyecto2ipc1.herokuapp.com/Medicamentos', {
           method: 'POST',
@@ -441,7 +441,7 @@
             })
       }
       function perfil(){
-        console.log(us)
+        //console.log(us)
         sessionStorage.setItem("buscar", us)
         location.href="PerfilAdmin.html"
       }
@@ -457,7 +457,7 @@
                 alert("Ocurrio un error, ver la consola")
             })
             .then(response =>{
-                console.log(response.permitir)
+                //console.log(response.permitir)
                 if(response.permitir == "no"){
                   location.href="Login.html"
                 }
