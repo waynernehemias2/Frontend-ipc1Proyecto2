@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <img src="Uhospital.JPG" align="center" width="200" height="125" ><img src="orgS.jfif"  width="125" height="125" align="left">
+    <title>Uhospital</title>
+    
+  </head>
+  <body>
+    
+  
+    <div>
+    <center>
+        <div style="width: 40%; padding-left: 25px;">
+        <form>
+                <div class="mb-3">
+                  <label for="usuario" class="form-label">Usuario</label>
+                  <input type="text" class="form-control" id="usuarioL">
+                </div>
+                <div class="mb-3">
+                  <label for="contrasena" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="contrasenaL">
+                </div>
+                <button onclick="PresionarBoton()" type="button" class="btn btn-primary">Iniciar sesion</button>
+                <button onclick="botonRegistrar()" type="button" class="btn btn-outline-dark">Registrarse</button>
+          </form>
+        </div>
+        <div><p>
+        </br>
+        </br>
+        </p></div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Mision </h5>
+                <p class="card-text">Nuestra mision es ayudar a las personas facilitando el acceso al area de salud con un sistema organizado en nuestro hospital con los mejores medicos capacitados.</p>
+                
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Vision</h5>
+                <p class="card-text">Nuestra Vision es crear un sistema medico de alto nivel que satisfaga las necesidades de nuestros pacientes mejorando en nuestro sistema y capacitando a nuestro personal para ofrecer el servicio de salud.</p>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><FONT COLOR="RED">¡PREVIENE EL COVID-19!</font></h5>
+                <p class="card-text">Usa tu mascarilla en todo lugar, lavate las manos frecuentemente y manten el distanciamiento social.</p>
+                
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Acerca de</h5>
+                <p class="card-text">Somos un centro hospitalario con las mejores instalaciones y equipo medico, nuestro personal especializado le atendera de la mejor forma para llevar su caso, contamos con todas las medidas de bioseguridad.</p>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+    </center>    
+    </div>
+    
+ 
+    
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script>
+        function botonRegistrar(){
+          location.href="Registrar.html"
+        }
+
+        function PresionarBoton(){
+            console.log("Hola me precionaste")
+            var usuarioL = document.querySelector('#usuarioL').value
+            var contrasenaL = document.querySelector('#contrasenaL').value
+            //console.log(Tipo)
+            if(usuarioL =="" || contrasenaL==""){
+              alert("Campo vacio")
+            }else{
+              // Esta cadena nos servira para escribir los datos en la tabla.
+            var cadena = ''
+            var url = 'https://backend-proyecto2ipc1.herokuapp.com/Inicio/'+usuarioL+'/'+contrasenaL
+            var objeto = {"usuario": usuarioL, "contrasena": contrasenaL}
+            
+            fetch(url, {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+            .then(res => res.json())
+            .catch(err => {
+                console.error('Error:', err)
+                alert("Ocurrio un error, ver la consola")
+            })
+            .then(response =>{
+              
+                // Usamos un foreach para darle el valor a un objeto dentro de un arreglo.
+
+                // arreglo.forEach(variable => {que se hara dentro del for})
+                if (response.mensaje == "No encontrado"){
+                  alert("Credenciales incorrectas")
+
+                }
+                if(response.Tipo=="admin"){
+                  alert("Bienvenido "+usuarioL);
+                  location.href="PaginaAdministrador.html"
+                }                  
+                if(response.Tipo=="paciente"){
+                  alert("Bienvenido "+usuarioL);
+                  location.href="PaginaPaciente.html"
+                  
+                }
+                if(response.Tipo =="doctor"){
+                  alert("Bienvenido "+usuarioL);
+                  location.href="PaginaDoctor.html"
+                }
+                if(response.Tipo =="enfermera"){
+                  alert("Bienvenido "+usuarioL);
+                  location.href="PaginaEnfermera.html"
+                }
+                
+                  
+                
+
+                // POR ULTIMO: Usamos innerHTML para agregar el HTML a la etiqueta que indicamos anteriormente.
+            })
+            
+            }            
+        }
+        
+    </script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    -->
+      
+      
+  
+      <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+          <span class="text-muted" _msthash="404807" _msttexthash="1907880"> Contactenos: 3044729720114@ingenieria.usac.edu.gt </br><center>&copy; Wayner López - 201801456</center></span>
+        </div>
+      </footer>
+  </body>
+</html>

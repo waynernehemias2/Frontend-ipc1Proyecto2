@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="es">
+    
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <div style="text-align: right"><button  onclick="Cerrarsesion()"  type="button" class="btn btn-outline-dark">Cerrar sesion </button><img src="orgS.jfif"  width="125" height="125" align="left"></div>
+    <div style="width: 93%; padding-left: 20px;"><center><img src="Uhospital.JPG" align="center" width="160" height="100" ></center></div>
+    
+    <center><title>TopReportes</title></center>
+    <center><h1>Top</h1></center>
+  </head >
+  <body >
+    <div>
+        <center>
+        <div style="width: 50%; padding-left: 25px;">
+        <form>
+        </div>
+        <div>
+        </br>
+        </br>
+        </div>
+        <div>
+            <div>
+                <button onclick="verificar()" type="button" class="btn btn-outline-warning">Top 5 medicamentos mas vendidos</button>
+            </div>
+            <div>
+            </br>
+            </br>
+            </div>
+            <div>
+                <button onclick="ObtenerDatos()" type="button" class="btn btn-outline-warning">Top 3 doctores con más citas atendidas</button>
+            </div>
+        </div>
+        <div>
+        </br>
+        </br>
+        </div>
+        <div>
+            <button onclick="Regresar()" type="button" class="btn btn-outline-dark">Regresar</button>
+            
+          </form>
+        </div>
+    </center> 
+    </div>
+    <div id="tab">
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th> Nombre </th>
+                <th> Cantidad</th>
+                
+            </tr>
+        </thead>
+        <!-- Al igual que los input, a la tabla que queremos agregarle informacion
+            Tambien le agregamos un id. -->
+        <tbody id="detalles2"></tbody>
+    </table>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script>
+        // METODO OBTENER
+        var Cant=[];
+        var userDoc=[];
+        var userNom=[];
+        var userApeell =[];
+        var docu=[];
+        var iter=0;
+        function ObtenerDatos(){
+            var guar=[];   
+            //var tabla = document.querySelector('#detalles')
+            // Esta cadena nos servira para escribir los datos en la tabla.
+            var cadena = 0;
+            var it = 0;
+            var comp="Completada"       
+            fetch('https://backend-proyecto2ipc1.herokuapp.com/Citas', {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+            .then(res => res.json())
+            .catch(err => {
+                console.error('Error:', err)
+                alert("Ocurrio un error, ver la consola")
+            })
+            .then(response =>{
+                console.log(response)
+                response.forEach(element => {
+                    // En este caso, element es el objeto que esta recorriendo el for, entonces por cada iteracion manipulamos a element
+                    //console.log(element)
+                    console.log(element.Paciente)
+                    console.log(element.Doctor)
+                    console.log(element.Estado)
+                    
+                    
+                    // Agregamos a la cadena los datos de la respuesta del JSON para agregarlo a un table.
+                        if(comp==element.Estado){
+                            console.log("Si entra")
+                          docu[iter]=element.Doctor;
+                          console.log(docu[iter])
+                          iter=iter+1;
+                          
+                        }      
+                        // Cabe destacar que tambien se pueden agregar otras etiquetas, en si se trabaja como texto.
+                        // NOTA: Recuerden no user '' si no que `` para que los deje usar el ${} y agregar variables al texto.
+                });
+
+                // POR ULTIMO: Usamos innerHTML para agregar el HTML a la etiqueta que indicamos anteriormente.
+                  
+            })
+            ObtenerDatosDoc()
+        }
+
+        function ObtenerDatosDoc(){
+            // La estructura del fetch no cambia, solo cambian los atributos, como el tipo de metodo.
+            var tabla = document.querySelector('#detalles')
+
+            // Esta cadena nos servira para escribir los datos en la tabla.
+            var cadena = 0;
+            
+            fetch('https://backend-proyecto2ipc1.herokuapp.com/Personas', {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+            .then(res => res.json())
+            .catch(err => {
+                console.error('Error:', err)
+                alert("Ocurrio un error, ver la consola")
+            })
+            .then(response =>{
+                console.log(response);
+                // Usamos un foreach para darle el valor a un objeto dentro de un arreglo.
+
+                // arreglo.forEach(variable => {que se hara dentro del for})
+                response.forEach(element => {
+                    var cont=0;
+                    // En este caso, element es el objeto que esta recorriendo el for, entonces por cada iteracion manipulamos a element
+                    //console.log(element)
+                    // Agregamos a la cadena los datos de la respuesta del JSON para agregarlo a un table.
+                    console.log("tam "+docu.length)
+                    if(element.Tipo=="doctor"){
+                        console.log("Si entra")
+                        var i=0;
+                        for(i=0;i<docu.length;i++){
+                            if(element.Usuario==docu[i]){
+                                cont=cont+1;
+                            }
+                        }
+                        /////aqui se agrega nombre y apellido
+                        userDoc[cadena]=element.Nombre;
+                        userApeell[cadena]=element.Apellido;
+                        Cant[cadena]=cont;
+                        console.log(userDoc[cadena]+" aqui")
+                        console.log(cont+" aqui")
+                        console.log( Cant[cadena]+" aqui s")
+                        
+                        cadena=cadena+1; 
+                    }
+                           
+                        // Cabe destacar que tambien se pueden agregar otras etiquetas, en si se trabaja como texto                        // NOTA: Recuerden no user '' si no que `` para que los deje usar el ${} y agregar variables al texto.
+                });
+
+                // POR ULTIMO: Usamos innerHTML para agregar el HTML a la etiqueta que indicamos anteriormente.
+                arreglo()
+            })
+            
+        }
+        function arreglo(){
+            console.log("Si entro aqui")
+            var i=0;
+            for(i=0;i<userDoc.length-1;i++){
+                if(Cant[i]< Cant[i+1]){
+                    var men=Cant[i];
+                    var may=Cant[i+1];
+                    Cant[i]=may;
+                    Cant[i+1]=men;
+                    var alm=userDoc[i];
+                    userDoc[i]=userDoc[i+1];
+                    userDoc[i+1]=alm;
+                    var alm1=userApeell[i];
+                    userApeell[i]=userApeell[i+1];
+                    userApeell[i+1]=alm1;
+                     
+                }
+            }
+            var is=0;
+            for(is=0;is<userDoc.length-1;is++){
+                console.log("Este "+userDoc[is])
+                console.log("casi "+Cant[is])
+            }
+            tabla()
+        }
+        
+        function tabla(){
+            console.log("En la tabla")
+            var cadena = ''
+            var tabla = document.querySelector('#detalles2')
+            var i=0;
+                for (var i = 0; i < userDoc.length; i++) {
+                        cadena +=`<tr>
+                            <td> ${userDoc[i]+" "+userApeell[i]} </td>
+                            <td> ${Cant[i]} </td>
+                        </tr>`
+                        
+                    
+                }     
+                tabla.innerHTML = cadena
+                createPDF()
+        }
+
+        function createPDF() {
+        var sTable = document.getElementById('tab').innerHTML;
+
+        var style = "<style>";
+        style = style + "table {width: 100%;font: 17px Calibri;}";
+        style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
+        style = style + "padding: 2px 3px;text-align: center;}";
+        style = style + "</style>";
+
+        // CREATE A WINDOW OBJECT.
+        var win = window.open('', '', 'height=700,width=700');
+
+        win.document.write('<html><head>');
+        win.document.write('<title>Top doctores</title>');   // <title> FOR PDF HEADER.
+        win.document.write(style);  
+               // ADD STYLE INSIDE THE HEAD TAG.
+        win.document.write('</head>');
+        win.document.write('<body>');
+        win.document.write('<center><h1>Uhospital</h1></center>');
+        win.document.write('<h1>Top doctores</h1>');
+        win.document.write(sTable);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
+        win.document.write('</body></html>');
+        win.document.close(); 	// CLOSE THE CURRENT WINDOW.
+        win.print();    // PRINT THE CONTENTS.
+    }
+   
+
+        function Regresar(){         
+                location.href="PaginaAdministrador.html"
+        }
+        function Cerrarsesion(){
+        var x="no"
+        var objeto={
+          'permitir': x
+        }
+        fetch(`https://backend-proyecto2ipc1.herokuapp.com/navegar/${x}`, {
+            method: 'PUT',
+            body: JSON.stringify(objeto),
+            headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+            .then(res => res.json())
+            .catch(err => {
+                console.error('Error:', err)
+                alert("Ocurrio un error, ver la consola")
+            })
+            .then(response =>{
+                console.log(response);
+                alert(response.Mensaje)
+                
+                location.href="Login.html"
+
+            })
+      }
+
+       
+        
+    </script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    -->
+    <img src="orgS.jfif"  width="125" height="125" align="right">
+  </body>
+</html>

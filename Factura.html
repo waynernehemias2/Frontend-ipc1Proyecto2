@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <div style="text-align: right"><img src="orgS.jfif"  width="125" height="125" align="left"></div>
+    <div style="width: 91%; padding-left: 20px; float: center"><center><img src="Uhospital.JPG" align="center" width="160" height="100" ></center></div>
+    <title>UHospital</title>
+  </head>
+  <body onload= "ObtenerDatos()">
+    <p> </p>
+    <center><h1>Facturar</h1></center>
+    <div>
+        <center>
+        <div style="width: 50%; padding-left: 25px;">
+        <form>
+            <div class="mb-3">
+                <label for="fecha" class="form-label">Fecha</label>
+                <input type="date" class="form-control" id="fecha">
+            </div>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Paciente</label>
+              <input type="text" class="form-control" id="nombre">
+            </div>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Seleccione Doctor</label>
+                <select class="form-select" id ="doc" aria-label="Default select example">
+                    <optgroup id="detalles"></optgroup>
+                </select>
+                
+            </div>
+            <div class="mb-3">
+                <label for="Pco" class="form-label">Precio consulta</label>
+                <input type="number" class="form-control" id="Pco">
+            </div>
+            <div class="mb-3">
+                <label for="Co" class="form-label">Costo operación</label>
+                <input type="number" class="form-control" id="Co">
+            </div> 
+            <div class="mb-3">
+                <label for="Ci" class="form-label">Costo internado</label>
+                <input type="number" class="form-control" id="Ci">
+            </div>
+            <div class="mb-3">
+                <label for="total" class="form-label">Total</label>
+                <input type="number" class="form-control" id="total">
+                <button onclick="Total()" type="button" class="btn btn-outline-dark">Calcular total</button>
+            </div>
+            <button onclick="PresionarBoton()" type="button" class="btn btn-outline-dark">Facturar</button>
+            <button onclick="Regresar()" type="button" class="btn btn-outline-dark">Regresar</button>
+        
+          </form>
+          
+        </div>
+        <div>
+            <p></p>
+        </div>
+        <div style="width: 75%; padding-right: 25px; float: center;">
+            <div id="tab">
+                <table class="table table-striped">
+                    
+                    <!-- Al igual que los input, a la tabla que queremos agregarle informacion
+                        Tambien le agregamos un id. -->
+                    <tbody id="detalles2"></tbody>
+                </table>
+                </div>
+        </div>
+    </center>
+    
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script>
+        var fac = false;
+        var fecha = "";
+        var nomb = "";
+        var doc = "";
+        var Pco = 0;
+        var Co = 0;
+        var Ci = 0;
+        var total = 0;
+
+
+        function Regresar(){         
+                location.href="PaginaEnfermera.html"
+        }
+        function Total(){
+             fecha = document.querySelector('#fecha').value
+             nomb = document.querySelector('#nombre').value
+             doc = document.querySelector('#doc').value
+             Pco = parseFloat(document.querySelector('#Pco').value)
+             Co = parseFloat(document.querySelector('#Co').value)
+             Ci = parseFloat(document.querySelector('#Ci').value)
+             if(isNaN(Co) == true){
+                 Co=0;
+             }
+             if(isNaN(Ci) == true){
+                 Ci=0;
+             }
+              
+            if(fecha == "" || nomb == "" || isNaN(Pco)==true ){
+                fac = false;
+                alert("Campo vacio en la facturación")
+                
+            }
+            total = Pco+Ci+Co;
+            console.log(Pco)
+             console.log(total)
+            document.querySelector('#total').value = total
+            fac = true;
+            
+        }
+        function PresionarBoton(){
+            if(fac == true){
+            var tabla = document.querySelector('#detalles2')
+            cadena =`
+                    <thead class="table-dark">
+                        <tr bgcolor= "#00FFFF">
+                            <th> Fecha </th>
+                            <th> Paciente </th>
+                            <th> Doctor </th>
+                            <th> Precio consulta </th>
+                            <th> Precio operación </th>
+                            <th> Costo internado </th>
+                            <th> Total </th>
+                        </tr>
+                    </thead>
+                        <tr>
+                            <td> ${fecha} </td>
+                            <td> ${nomb} </td>
+                            <td> ${doc} </td>
+                            <td> ${Pco} </td>
+                            <td> ${Co} </td>
+                            <td> ${Ci} </td>
+                            <td> ${total} </td>
+                            </tr>`
+                            tabla.innerHTML = cadena
+                            createPDF()  
+            }else{
+                alert("Calcule total")
+            }
+            
+        }
+        function ObtenerDatos(){
+            // La estructura del fetch no cambia, solo cambian los atributos, como el tipo de metodo.
+            var tabla1 = document.querySelector('#detalles')
+
+            // Esta cadena nos servira para escribir los datos en la tabla.
+            var cadena = ''
+            
+            fetch('https://backend-proyecto2ipc1.herokuapp.com/Personas', {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+            .then(res => res.json())
+            .catch(err => {
+                console.error('Error:', err)
+                alert("Ocurrio un error, ver la consola")
+            })
+            .then(response =>{
+                console.log(response);
+                // Usamos un foreach para darle el valor a un objeto dentro de un arreglo.
+
+                // arreglo.forEach(variable => {que se hara dentro del for})
+                response.forEach(element => {
+                    // En este caso, element es el objeto que esta recorriendo el for, entonces por cada iteracion manipulamos a element
+                    console.log(element)
+                    // Agregamos a la cadena los datos de la respuesta del JSON para agregarlo a un table.
+                    if(element.Tipo=="doctor"){
+                      
+                        cadena += `
+                        <option value="${element.Nombre+" "+element.Apellido}">${element.Nombre+" "+element.Apellido}</option>`
+                        console.log(cadena)
+                        
+                    }        
+                        // Cabe destacar que tambien se pueden agregar otras etiquetas, en si se trabaja como texto.
+                        // NOTA: Recuerden no user '' si no que `` para que los deje usar el ${} y agregar variables al texto.
+                tabla1.innerHTML = cadena
+                });
+
+                // POR ULTIMO: Usamos innerHTML para agregar el HTML a la etiqueta que indicamos anteriormente.
+                
+            })
+        }
+
+        function createPDF() {
+        var sTable = document.getElementById('tab').innerHTML;
+
+        var style = "<style>";
+        style = style + "table {width: 100%;font: 17px Calibri;}";
+        style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
+        style = style + "padding: 2px 3px;text-align: center;}";
+        style = style + "</style>";
+
+        // CREATE A WINDOW OBJECT.
+        var win = window.open('', '', 'height=700,width=700');
+
+        win.document.write('<html><head>');
+        win.document.write('<title>Factura</title>');   // <title> FOR PDF HEADER.
+        win.document.write(style);  
+               // ADD STYLE INSIDE THE HEAD TAG.
+        win.document.write('</head>');
+        win.document.write('<body>');
+        win.document.write('<center><h1>Uhospital</h1></center>');
+        win.document.write('<h1>Factura</h1>');
+        win.document.write(sTable);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
+        win.document.write('</body></html>');
+        win.document.close(); 	// CLOSE THE CURRENT WINDOW.
+        win.print();    // PRINT THE CONTENTS.
+    }
+    </script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>

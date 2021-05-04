@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <div style="text-align: right"><button  onclick="Cerrarsesion()"  type="button" class="btn btn-outline-dark">Cerrar sesion </button><img src="orgS.jfif"  width="125" height="125" align="left"></div>
+    <div style="width: 93%; padding-left: 20px;"><center><img src="Uhospital.JPG" align="center" width="160" height="100" ></center></div>
+    <div><center><h1>Administrador</h1></center></div>
+    <title>UHospital</title>
+  </head>
+  
+  <body onload="ObtenerDatos()">
+    
+    <div>
+        <center>
+        <div style="width: 95%; padding-left: 25px;">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table-dark">
+                        <th> Datos </th>
+                        <th> Visualizar </th>
+                        <th> Elejir Archivo </th>
+                        <th> Cargar </th>
+                    </tr>
+                    <tr>
+                      <th> Pacientes</th>
+                        <th> <button onclick="mostrarUs()" type="button" class="btn btn-outline-dark">Mostrar</button> </th>
+                        <th>
+                          <div class="mb-3">
+                            <label for="formFileSm" class="form-label"></label>
+                            <input class="form-control form-control-sm" id="fileP" type="file">
+                          </div>
+                        </th>
+                        <th> <button onclick="cargaUs()" type="button" class="btn btn-outline-dark">Cargar Archivo</button> </th>
+                    </tr>
+                    <tr>
+                      <th> Doctores</th>
+                        <th> <button onclick="mostrarDoc()" type="button" class="btn btn-outline-dark">Mostrar</button> </th>
+                        <th>
+                          <div class="mb-3">
+                            <label for="formFileSm" class="form-label"></label>
+                            <input class="form-control form-control-sm" id="fileD" type="file">
+                          </div>
+                        </th>
+                        <th> <button onclick="cargaDoc()" type="button" class="btn btn-outline-dark">Cargar Archivo</button> </th>
+                    </tr>
+                    <tr>
+                      <th> Enfermeras</th>
+                        <th> <button onclick="mostrarEnf()" type="button" class="btn btn-outline-dark">Mostrar</button> </th>
+                        <th>
+                          <div class="mb-3">
+                            <label for="formFileSm" class="form-label"></label>
+                            <input class="form-control form-control-sm" id="fileE" type="file">
+                          </div>
+                        </th>
+                        <th> <button onclick="cargaEnf()" type="button" class="btn btn-outline-dark">Cargar Archivo</button> </th>
+                    </tr>
+                    <tr>
+                      <th> Medicina</th>
+                        <th> <button onclick="mostrarMed()" type="button" class="btn btn-outline-dark">Mostrar</button> </th>
+                        <th>
+                          <div class="mb-3">
+                          <label for="formFileSm" class="form-label"></label>
+                            <input class="form-control form-control-sm" id="fileM" type="file">
+                          </div>
+                        </th>
+                        <th> <button onclick="cargaMed()" type="button" class="btn btn-outline-dark">Cargar Archivo</button> </th>
+                    </tr>
+                </thead>
+                <!-- Al igual que los input, a la tabla que queremos agregarle informacion
+                    Tambien le agregamos un id. -->
+                <tbody id="detalles"></tbody>
+            </table>
+            <button onclick="perfil()" type="button" class="btn btn-outline-dark">Ver mi perfil</button>
+            <button onclick="reportes()" type="button" class="btn btn-outline-dark">Reportes</button>
+        </div>
+    </center>
+    </div>
+    <div>
+  </div>
+  <div>
+      <p>
+      </p>
+  </div>
+  <footer class="footer mt-auto py-3 bg-light">
+      <div class="container">
+        <span class="text-muted" _msthash="404807" _msttexthash="1907880"> Contactenos: 3044729720114@ingenieria.usac.edu.gt </br><center>&copy; Wayner López - 201801456</center></span>
+      </div>
+    </footer>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+      var u=""
+      var ap= ""
+      var est= "estado"
+      var us = ""
+        function ObtenerDatos(){
+            // La estructura del fetch no cambia, solo cambian los atributos, como el tipo de metodo.
+
+            // Esta cadena nos servira para escribir los datos en la tabla.
+            
+            fetch('https://backend-proyecto2ipc1.herokuapp.com/UsuarioP', {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+            .then(res => res.json())
+            .catch(err => {
+                console.error('Error:', err)
+                alert("Ocurrio un error, ver la consola")
+            })
+            .then(response =>{
+                console.log(response);
+                // Usamos un foreach para darle el valor a un objeto dentro de un arreglo.
+
+                // arreglo.forEach(variable => {que se hara dentro del for})
+
+                    // Agregamos a la cadena los datos de la respuesta del JSON para agregarlo a un table.
+                      u = response.Nombre
+                      ap=response.Apellido
+                      us = response.Usuario
+                      console.log(u);
+                      console.log(us);
+
+
+                // POR ULTIMO: Usamos innerHTML para agregar el HTML a la etiqueta que indicamos anteriormente.
+                
+            })
+
+            //aquicomienza
+          
+        }
+        
+      function cargaUs(){
+        $('#fileP').parse({
+          config:{
+            delimiter:",",
+            complete:GuardarUs,
+          },
+          before: function(file, inputElem){
+              console.log("Parsiando ",file);
+          },
+          error: function(err, file){
+             console.log("Error ",err,file);
+          },
+          complete: function(){
+            console.log("Done");
+          }
+        });
+      }
+
+      async function GuardarUs(results){
+        console.log(results.data)
+        var data = results.data;
+        var val = true
+
+        for(i=1; i<data.length-1; i++){
+          var nombre = data[i][0]
+          var apellido = data[i][1]
+          var fechaNacimiento = data[i][2]
+          var sexo = data[i][3]
+          var usuario = data[i][4]
+          var contrasena = data[i][5]
+          var telefono = data[i][6]
+          var objeto={
+                'nombre': nombre,
+                'apellido': apellido,
+                'fechaNacimiento': fechaNacimiento,
+                'sexo': sexo,
+                'usuario': usuario,
+                'contrasena': contrasena,
+                'especialidad': " ",
+                'telefono': telefono,
+                'tipo' : "paciente"
+          }
+          console.log(objeto)
+          
+          fetch('https://backend-proyecto2ipc1.herokuapp.com/Personas', {
+          method: 'POST',
+          body: JSON.stringify(objeto),
+          headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+          .then(res => res.json())
+          .catch(err => {
+              console.error('Error:',err)
+              alert("Ocurrio un error")
+              val = false
+          })
+          .then(response =>{
+                console.log(response);
+                
+          })
+
+        }
+        if(val=true){
+          alert("Pacientes cargados")
+        }
+      }
+
+      function mostrarUs(){
+        location.href="Datosusuarios.html"
+      }
+
+      function cargaDoc(){
+        $('#fileD').parse({
+          config:{
+            delimiter:",",
+            complete:GuardarDoc,
+          },
+          before: function(file, inputElem){
+              console.log("Parsiando ",file);
+          },
+          error: function(err, file){
+             console.log("Error ",err,file);
+          },
+          complete: function(){
+            console.log("Done");
+          }
+        });
+      }
+
+      async function GuardarDoc(results){
+        console.log(results.data)
+        var data = results.data;
+        var val = true
+
+        for(i=1; i<data.length-1; i++){
+          var nombre = data[i][0]
+          var apellido = data[i][1]
+          var fechaNacimiento = data[i][2]
+          var sexo = data[i][3]
+          var usuario = data[i][4]
+          var contrasena = data[i][5]
+          var especialidad = data[i][6]
+          var telefono = data[i][7]
+          var objeto={
+                'nombre': nombre,
+                'apellido': apellido,
+                'fechaNacimiento': fechaNacimiento,
+                'sexo': sexo,
+                'usuario': usuario,
+                'contrasena': contrasena,
+                'especialidad': especialidad,
+                'telefono': telefono,
+                'tipo' : "doctor"
+          }
+          console.log(objeto)
+          
+          fetch('https://backend-proyecto2ipc1.herokuapp.com/Personas', {
+          method: 'POST',
+          body: JSON.stringify(objeto),
+          headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+          .then(res => res.json())
+          .catch(err => {
+              console.error('Error:',err)
+              alert("Ocurrio un error")
+              val = false
+          })
+          .then(response =>{
+                console.log(response);
+                
+          })
+
+        }
+        if(val=true){
+          alert("Doctores cargados")
+        }
+      }
+
+      function mostrarDoc(){
+        location.href="Datosdoctores.html"
+      }
+
+      function cargaEnf(){
+        $('#fileE').parse({
+          config:{
+            delimiter:",",
+            complete:GuardarEnf,
+          },
+          before: function(file, inputElem){
+              console.log("Parsiando ",file);
+          },
+          error: function(err, file){
+             console.log("Error ",err,file);
+          },
+          complete: function(){
+            console.log("Done");
+          }
+        });
+      }
+
+      async function GuardarEnf(results){
+        console.log(results.data)
+        var data = results.data;
+        var val = true
+
+        for(i=1; i<data.length-1; i++){
+          var nombre = data[i][0]
+          var apellido = data[i][1]
+          var fechaNacimiento = data[i][2]
+          var sexo = data[i][3]
+          var usuario = data[i][4]
+          var contrasena = data[i][5]
+          var telefono = data[i][6]
+          var objeto={
+                'nombre': nombre,
+                'apellido': apellido,
+                'fechaNacimiento': fechaNacimiento,
+                'sexo': sexo,
+                'usuario': usuario,
+                'contrasena': contrasena,
+                'especialidad': " ",
+                'telefono': telefono,
+                'tipo' : "enfermera"
+          }
+          console.log(objeto)
+          
+          fetch('https://backend-proyecto2ipc1.herokuapp.com/Personas', {
+          method: 'POST',
+          body: JSON.stringify(objeto),
+          headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+          .then(res => res.json())
+          .catch(err => {
+              console.error('Error:',err)
+              alert("Ocurrio un error")
+              val = false
+          })
+          .then(response =>{
+                console.log(response);
+                
+          })
+
+        }
+        if(val=true){
+          alert("Enfermeras cargadas")
+        }
+      }
+
+      function mostrarEnf(){
+        location.href="Datosenfermeras.html"
+      }
+
+      function cargaMed(){
+        $('#fileM').parse({
+          config:{
+            delimiter:",",
+            complete:GuardarMed,
+          },
+          before: function(file, inputElem){
+              console.log("Parsiando ",file);
+          },
+          error: function(err, file){
+             console.log("Error ",err,file);
+          },
+          complete: function(){
+            console.log("Done");
+          }
+        });
+      }
+
+      async function GuardarMed(results){
+        console.log(results.data)
+        var data = results.data;
+        var val = true
+
+        for(i=1; i<data.length-1; i++){
+          var nombre = data[i][0]
+          var precio = data[i][1]
+          var descripcion = data[i][2]
+          var cantidad = data[i][3]
+          var objeto={
+                'nombre': nombre,
+                'precio': precio,
+                'descripcion': descripcion,
+                'cantidad': cantidad,
+          }
+          console.log(objeto)
+          
+          fetch('https://backend-proyecto2ipc1.herokuapp.com/Medicamentos', {
+          method: 'POST',
+          body: JSON.stringify(objeto),
+          headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+          .then(res => res.json())
+          .catch(err => {
+              console.error('Error:',err)
+              alert("Ocurrio un error")
+              val = false
+          })
+          .then(response =>{
+                console.log(response);
+                
+          })
+
+        }
+        if(val=true){
+          alert("Medicamentos cargados")
+        }
+      }
+
+      function mostrarMed(){
+        location.href="Datosmedicamentos.html"
+      }
+      function Cerrarsesion(){
+        var x="no"
+        var objeto={
+          'permitir': x
+        }
+        fetch(`https://backend-proyecto2ipc1.herokuapp.com/navegar/${x}`, {
+            method: 'PUT',
+            body: JSON.stringify(objeto),
+            headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+            .then(res => res.json())
+            .catch(err => {
+                console.error('Error:', err)
+                alert("Ocurrio un error, ver la consola")
+            })
+            .then(response =>{
+                console.log(response);
+                alert(response.Mensaje)
+                
+                location.href="Login.html"
+
+            })
+      }
+      function perfil(){
+        console.log(us)
+        sessionStorage.setItem("buscar", us)
+        location.href="PerfilAdmin.html"
+      }
+      function navegar(){
+        fetch('https://backend-proyecto2ipc1.herokuapp.com/navegar', {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',}})
+            .then(res => res.json())
+            .catch(err => {
+                console.error('Error:', err)
+                alert("Ocurrio un error, ver la consola")
+            })
+            .then(response =>{
+                console.log(response.permitir)
+                if(response.permitir == "no"){
+                  location.href="Login.html"
+                }
+                
+            })
+            ObtenerDatos()
+        }
+        function reportes(){
+          location.href="ReportesTop.html"
+        }
+    </script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    -->
+    
+  </body>
+</html>
